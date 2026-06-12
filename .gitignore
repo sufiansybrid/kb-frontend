@@ -1,0 +1,10 @@
+# Environment template file
+env.example
+
+# Uploads directory
+/uploads/
+
+# environments file
+.env
+
+/node_modules/
