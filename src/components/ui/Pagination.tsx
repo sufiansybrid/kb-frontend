@@ -65,7 +65,7 @@ export function Pagination({ page, pages, total, perPage, onPageChange, onPerPag
           onChange={(e) => { onPerPageChange(Number(e.target.value)); onPageChange(1); }}
           className="select h-7 text-xs py-0 px-2"
         >
-          {[5, 10, 25, 50].map((n) => <option key={n} value={n}>{n}</option>)}
+          {[5, 10, 25, 50, 100].map((n) => <option key={n} value={n}>{n}</option>)}
         </select>
       </div>
     </div>

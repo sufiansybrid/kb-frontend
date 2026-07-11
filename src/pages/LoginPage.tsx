@@ -84,9 +84,9 @@ export function LoginPage() {
           </p>
         </div>
 
-        <p className="text-center text-xs text-gray-400 mt-4">
+        {/* <p className="text-center text-xs text-gray-400 mt-4">
           Demo: admin@example.com / admin123
-        </p>
+        </p> */}
       </div>
     </div>
   );

@@ -98,8 +98,8 @@ export function AdminUsersPage() {
             <Search size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400" />
             <input
               type="text"
-              placeholder="Search users…"
-              className="input h-8 text-xs pl-7 w-48"
+              placeholder="Search by email or name…"
+              className="input h-8 text-xs pl-7 w-50"
               value={searchQ}
               onChange={(e) => { setSearchQ(e.target.value); setPage(1); }}
             />

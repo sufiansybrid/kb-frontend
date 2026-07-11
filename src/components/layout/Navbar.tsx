@@ -1,12 +1,15 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, Bell, LogOut, ChevronDown } from 'lucide-react';
+import { Search, Bell, LogOut, ChevronDown, Menu } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import { initials } from '../../utils/helpers';
 
-interface NavbarProps { title: string }
+interface NavbarProps {
+  title: string;
+  onMenuClick: () => void;   // triggers mobile sidebar open
+}
 
-export function Navbar({ title }: NavbarProps) {
+export function Navbar({ title, onMenuClick }: NavbarProps) {
   const { user, logout, isAdmin } = useAuthStore();
   const navigate = useNavigate();
   const [search, setSearch] = useState('');
@@ -25,12 +28,24 @@ export function Navbar({ title }: NavbarProps) {
   }
 
   return (
-    <header className="h-14 bg-white border-b border-gray-200 flex items-center px-6 gap-4 flex-shrink-0">
+    <header className="h-14 bg-white border-b border-gray-200 flex items-center px-4 gap-3 flex-shrink-0">
+
+      {/* ── Hamburger — mobile only ── */}
+      <button
+        onClick={onMenuClick}
+        className="md:hidden flex items-center justify-center w-8 h-8 rounded-lg text-gray-500
+                   hover:bg-gray-100 hover:text-gray-700 transition-colors flex-shrink-0"
+        title="Open menu"
+      >
+        <Menu size={18} />
+      </button>
+
+      {/* ── Page title ── */}
       <h1 className="text-[15px] font-semibold text-gray-900 whitespace-nowrap">{title}</h1>
 
-      {/* Global search */}
-      <div className="relative flex-1 max-w-md">
-        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+      {/* ── Global search ── */}
+      <div className="relative flex-1 max-w-md hidden sm:block">
+        <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
         <input
           type="text"
           value={search}
@@ -41,16 +56,19 @@ export function Navbar({ title }: NavbarProps) {
         />
       </div>
 
+      {/* ── Right side ── */}
       <div className="ml-auto flex items-center gap-1">
-        <button className="btn-ghost btn p-2"><Bell size={16} /></button>
+        <button className="btn-ghost btn p-2 hidden sm:flex"><Bell size={16} /></button>
 
-        {/* User menu */}
+        {/* User dropdown */}
         <div className="relative">
           <button
             onClick={() => setMenuOpen((v) => !v)}
-            className="flex items-center gap-2 ml-1 pl-3 border-l border-gray-200 hover:bg-gray-50 rounded-lg px-2 py-1.5 transition-colors"
+            className="flex items-center gap-2 ml-1 pl-3 border-l border-gray-200
+                       hover:bg-gray-50 rounded-lg px-2 py-1.5 transition-colors"
           >
-            <div className="w-7 h-7 rounded-full bg-brand-light flex items-center justify-center text-brand text-[11px] font-semibold">
+            <div className="w-7 h-7 rounded-full bg-brand-light flex items-center justify-center
+                            text-brand text-[11px] font-semibold flex-shrink-0">
               {user ? initials(user.username) : '?'}
             </div>
             <div className="text-left hidden sm:block">
@@ -61,18 +79,24 @@ export function Navbar({ title }: NavbarProps) {
           </button>
 
           {menuOpen && (
-            <div className="absolute right-0 top-full mt-1 w-44 bg-white rounded-lg border border-gray-200 shadow-lg z-30 py-1">
-              <div className="px-3 py-2 border-b border-gray-100">
-                <p className="text-xs font-medium text-gray-900">{user?.username}</p>
-                <p className="text-[11px] text-gray-500 truncate">{user?.email}</p>
+            <>
+              {/* Click-outside trap */}
+              <div className="fixed inset-0 z-10" onClick={() => setMenuOpen(false)} />
+              <div className="absolute right-0 top-full mt-1 w-48 bg-white rounded-xl
+                              border border-gray-200 shadow-lg z-20 py-1 overflow-hidden">
+                <div className="px-3 py-2.5 border-b border-gray-100">
+                  <p className="text-xs font-semibold text-gray-900">{user?.username}</p>
+                  <p className="text-[11px] text-gray-400 truncate">{user?.email}</p>
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="w-full flex items-center gap-2 px-3 py-2 text-xs text-red-600
+                             hover:bg-red-50 transition-colors"
+                >
+                  <LogOut size={13} /> Sign out
+                </button>
               </div>
-              <button
-                onClick={handleLogout}
-                className="w-full flex items-center gap-2 px-3 py-2 text-xs text-red-600 hover:bg-red-50 transition-colors"
-              >
-                <LogOut size={13} /> Sign out
-              </button>
-            </div>
+            </>
           )}
         </div>
       </div>
