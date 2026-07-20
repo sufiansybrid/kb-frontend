@@ -46,7 +46,9 @@ export function AddUrlPage() {
       setSingleUrl('');
       setBulkUrls('');
     } catch (err) {
-      toast.error(getErrorMessage(err));
+      // toast.error(getErrorMessage(err));
+      // The Axios response interceptor displays the single error toast automatically.
+      console.error('Failed to add URLs:', getErrorMessage(err));
     } finally {
       setLoading(false);
     }
